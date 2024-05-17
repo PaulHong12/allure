@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
     - name: Debug Git Info
       run: |
         git --version
@@ -20,9 +23,6 @@ jobs:
         git remote -v
         git branch -a
         ls -la
-    
-    - name: Checkout Repository
-      uses: actions/checkout@v4
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
