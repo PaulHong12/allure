@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign Up</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}"> <!-- Include the same stylesheet -->
+    <style>
+        input[type='text'], input[type='email'], input[type='password'] {
+            width: 100%;  /* Adjust the width as needed */
+            padding: 10px; /* Adjust padding as needed */
+            margin: 8px 0; /* Adjust margin as needed */
+            display: inline-block;
+            border: 1px solid #ccc; /* Adjust border as needed */
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('#signup_btn').click(function(event) {
+                event.preventDefault();
+                console.log("signup clicked!!!");
+
+                var username = $('#username').val();
+                var email = $('#email').val();
+                var password = $('#password').val();
+                var confirmPassword = $('#confirm-password').val();
+
+                // Add validation here (e.g., check if passwords match)
+
+                var param = {
+                    username: username,
+                    email: email,
+                    password: password,
+                };
+
+                $.ajax({
+                    url: "/members/auth/signUp",
+                    method: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(param)
+                }).then(function(data) {
+                    console.log("Success:", data);
+                    alert("회원 가입이 되었습니다.");
+                    window.location.href = '/'+ email + '/home';
+                }, function(err) {
+                    console.error("Error:", err);
+                    alert("Error during sign up.");
+                    window.location.reload();
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<form>
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" />
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" />
+    </div>
+    <div>
+        <label for="confirm-password">Confirm Password:</label>
+        <input type="password" id="confirm-password" name="confirmPassword" />
+    </div>
+    <div>
+        <button type="submit" id="signup_btn">Sign Up</button>
+    </div>
+</form>
+</body>
+</html>
