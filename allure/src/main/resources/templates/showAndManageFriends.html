@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>친구 목록</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Create room and join (WebSocket logic)
+    function createRoomAndJoin(userA, userB) {
+        var formData = {
+            userA: userA,
+            userB: userB
+        };
+
+        $.ajax({
+            url: '/chat/createroom',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                // Redircatiect to the chat view with room ID and user UUID
+                window.loon.href = '/chat?roomId=' + response.roomId + '&userUUID=' + response.userUUID;
+            },
+            error: function(xhr, status, error) {
+                console.error('Error creating chat room:', xhr.responseText);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        // Friend name link click handler
+        $(document).on('click', '.friendNameLink', function(event) {
+            event.preventDefault();
+            var friendEmail = $(this).siblings(".friendEmail").val();
+            window.location.href = '/' + friendEmail + '/home';
+        });
+
+        // Delete friend button click handler
+        $(document).on('click', '.deleteFriendBtn', function() {
+            var username = $(this).siblings(".username").val();
+            var friendName = $(this).siblings(".friendName").val();
+            var formData = {
+                username: username,
+                friendName: friendName
+            };
+            $.ajax({
+                url: '/members/deleteFriend',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    window.location.href = '/showAndManageFriends';
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error deleting friend:', xhr.responseText);
+                }
+            });
+        });
+
+        $(document).on('click', '.messageFriendBtn', function() {
+            var userA = $(this).siblings(".username").val();
+            var userB = $(this).siblings(".friendName").val();
+            createRoomAndJoin(userA, userB);
+        });
+    });
+  </script>
+  <style>
+    #membersList {
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+    .member-item {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+        cursor: pointer;
+    }
+    .member-item:hover {
+        background-color: #f0f0f0;
+    }
+    .friendNameLink {
+        text-decoration: none;
+        color: #007bff;
+    }
+    .friendNameLink:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<h1>친구목록</h1>
+<div id="membersList">
+  <div th:each="member : ${members}" class="member-item">
+    <a href="#" class="friendNameLink" th:text="${member.username}" th:data-member-id="${member.username}">Username</a>
+
+    <!-- Message Button -->
+    <button class="messageFriendBtn" th:data-member-id="${member.username}">Message</button>
+
+    <!-- Delete Friend Button -->
+    <button class="deleteFriendBtn" th:data-member-id="${member.username}">Delete Friend</button>
+
+    <input type="hidden" class="friendName" th:value="${member.username}" />
+    <input type="hidden" class="friendEmail" th:value="${member.email}" />
+    <input type="hidden" class="username" th:value="${currentUsername}" />
+  </div>
+</div>
+</body>
+</html>
