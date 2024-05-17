@@ -13,6 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Debug Git Info
+      run: |
+        git --version
+        git config --list --show-origin
+        git remote -v
+        git branch -a
+        ls -la
+    
     - name: Checkout Repository
       uses: actions/checkout@v4
 
