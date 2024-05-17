@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Recommended Friends</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.addFriendBtn', function() {
+                var username = $(this).siblings(".username").val();
+                var friendName = $(this).siblings(".friendName").val();
+                var formData = {
+                    username: username,
+                    friendName: friendName
+                };
+                var parentDiv = $(this).parent(); // Get the parent div of the clicked button
+
+                $.ajax({
+                    url: '/members/addFriend',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        parentDiv.hide(); // Use .hide() to hide the element
+                        parentDiv.remove(); // Use .remove() to remove the element from the DOM
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error adding friend:', xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        #membersList {
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .member-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        .member-item:hover {
+            background-color: #f0f0f0;
+        }
+        .addFriendBtn {
+            text-decoration: none;
+            color: #007bff;
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .addFriendBtn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>친구 추천 목록</h1>
+<div id="membersList">
+    <div th:each="member : ${members}" class="member-item">
+        <span th:text="${member.username}">Username</span>
+        <button type="button" class="addFriendBtn">Add Friend</button>
+        <input type="hidden" class="friendName" th:value="${member.username}" />
+        <input type="hidden" class="username" th:value="${currentUsername}" />
+    </div>
+</div>
+</body>
+</html>

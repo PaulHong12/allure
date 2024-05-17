@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://musicdiary.c5a4ec66wz1z.ap-northeast-2.rds.amazonaws.com:5432/postgres
+    username: postgres
+    password: 1234qwer
+    driver-class-name: org.postgresql.Driver
