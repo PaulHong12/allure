@@ -6,6 +6,6 @@ spring:
           google:
             client-id: 186627986031-cjsu847s20jhulimu6q0brdc9linmsuc.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+            redirect-uri: "http://3.88.68.183:8080/login/oauth2/code/google"
             authorization-grant-type: authorization_code
             scope: email
