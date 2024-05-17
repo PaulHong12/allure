@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>받은 친구 요청</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.addFriendBtn', function() {
+                var username = $(this).siblings(".username").val();
+                var friendName = $(this).siblings(".friendName").val();
+                var formData = {
+                    username: username,
+                    friendName: friendName
+                };
+                $.ajax({
+                    url: '/members/acceptFriend',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        window.location.href = '/receivedFriendRequests';
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error adding friend:', xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        #friendRequestsList {
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .request-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        .request-item:hover {
+            background-color: #f0f0f0;
+        }
+        .addFriendBtn {
+            text-decoration: none;
+            color: #007bff;
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .addFriendBtn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>받은 친구 요청</h1>
+<div id="friendRequestsList">
+    <div th:if="${friendRequests.isEmpty()}">
+        <p>나를 추가한 친구가 아직 없어요.</p>
+    </div>
+    <div th:unless="${friendRequests.isEmpty()}">
+        <ul>
+            <li th:each="member : ${friendRequests}" class="request-item">
+                <span th:text="${member.username}">Username</span>
+                <button type="button" class="addFriendBtn">Accept Request</button>
+                <input type="hidden" class="friendName" th:value="${member.username}" />
+                <input type="hidden" class="username" th:value="${currentUsername}" />
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
