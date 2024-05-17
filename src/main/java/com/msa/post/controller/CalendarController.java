@@ -24,14 +24,14 @@ import java.util.Set;
 
 
 @Controller
-public class mainViewController {
+public class CalendarController {
 
     // Assuming you have a service to handle post retrieval
     private final PostService postService;
     private final MemberService memberService;
 
     // Constructor for controller
-    public mainViewController(PostService postService, MemberService memberService, PostController postController) {
+    public CalendarController(PostService postService, MemberService memberService, PostController postController) {
         this.postService = postService;
         this.memberService = memberService;
     }

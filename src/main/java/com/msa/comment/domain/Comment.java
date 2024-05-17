@@ -39,6 +39,9 @@ public class Comment {
     @UpdateTimestamp
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    public Comment(String content) {
+    }
+
 
     public void setPost(Post post, Long postId) {
         this.post = post;

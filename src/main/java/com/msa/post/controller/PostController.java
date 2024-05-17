@@ -1,4 +1,6 @@
 package com.msa.post.controller;
+
+import com.msa.Youtube.controller.YoutubeController;
 import com.msa.comment.dto.CommentDto;
 import com.msa.member.service.MemberService;
 import com.msa.post.domain.Post;
@@ -23,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 public class PostController {
 
     private final PostService postService;
-    //private final YoutubeController youtubeController;
+    private final YoutubeController youtubeController;
     private final MemberService memberService;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -31,9 +33,9 @@ public class PostController {
     @ResponseBody
     public ResponseEntity<ResultDto<PostDto>> addPost(@RequestBody PostDto dto) {
         // set video ID
-      //  String keyword = dto.getKeyword();
-       // String videoID = youtubeController.SearchYoutube(keyword);
-      //  dto.setVideoId(videoID);
+        String keyword = dto.getKeyword();
+        String videoID = youtubeController.SearchYoutube(keyword);
+        dto.setVideoId(videoID);
 
         Post newPost = postService.addPost(dto.getTitle(), dto.getContent(), dto.getUsername(), dto.getVideoId());
         String formattedDate = LocalDate.now().format(dateFormatter);
@@ -56,8 +58,8 @@ public class PostController {
 
         if (post.getCreator().equals(currentUsername)) {
             String keyword = dto.getKeyword();
-            //String videoID = youtubeController.SearchYoutube(keyword);
-           // dto.setVideoId(videoID);
+            String videoID = youtubeController.SearchYoutube(keyword);
+            dto.setVideoId(videoID);
 
             // User is the creator, proceed with the update
             Post updatedPost = postService.updatePost(postId, dto.getTitle(), dto.getContent(), dto.getVideoId());
